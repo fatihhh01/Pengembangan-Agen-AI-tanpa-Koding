@@ -1,0 +1,114 @@
+{
+  "name": "1.Pengembangan Agen AI tanpa Koding",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        -240,
+        -96
+      ],
+      "id": "b2c963ca-71ce-4204-8408-167097143667",
+      "name": "When chat message received",
+      "webhookId": "08d33509-1b2b-44af-a897-d7cdbbe192cc"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a helpful aKamu adalah chatbot informasi akademik STT Terpadu Nurul Fikri. Bantu pengguna menjawab pertanyaan tentang perkuliahan, mata kuliah, tugas, jadwal, dan kegiatan akademik. Jawab dengan bahasa Indonesia yang sederhana dan jelas. Jika informasi tidak tersedia, katakan dengan jujur dan jangan mengarang.ssistant"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -16,
+        -96
+      ],
+      "id": "41e5789c-f0ab-44e1-8aef-315fd225269a",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        -16,
+        176
+      ],
+      "id": "464b490e-6c61-4e7d-95d7-df3aba8960a8",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "RaiKW7ruUAk4UoXe",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        128,
+        160
+      ],
+      "id": "cbca7baa-f11b-411e-ae33-3fea208fdaf1",
+      "name": "Simple Memory"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "6ac8df86-81cd-447a-8caa-9806cdde96a0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "dc96f10ae7dc95d3c138575ba243a0a167923dbcb524841d451aadf9135d5fb3"
+  },
+  "nodeGroups": [],
+  "id": "EZtbpX6KCoZM7vOf",
+  "tags": []
+}
