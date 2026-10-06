@@ -1,0 +1,181 @@
+{
+  "name": "AI Agent Chatbot Skripsi",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a helpful assistanKamu adalah AI chatbot yang membantu menjawab pertanyaan tentang penulisan ilmiah, tugas akhir, dan skripsi.\n\nGunakan hanya informasi yang ditemukan dari Supabase Vector Store sebagai sumber jawaban.\n\nJika informasi yang ditanyakan tidak ditemukan di Supabase Vector Store, jawab:\n\"Maaf, informasi tersebut tidak ditemukan dalam dokumen yang tersedia.\"\n\nJangan membuat informasi sendiri dan jangan menggunakan sumber dari luar dokumen.t"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -112,
+        -64
+      ],
+      "id": "52d8b8f0-049d-4e4c-922c-dd78d5e11b9e",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        -256,
+        144
+      ],
+      "id": "88004442-bc47-4855-bccc-a55185683e78",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "RaiKW7ruUAk4UoXe",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Mencari informasi tentang penulisan ilmiah, tugas akhir, dan skripsi dari dokumen yang tersimpan di Supabase.",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "topK": 5,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        288,
+        -48
+      ],
+      "id": "41284967-4d77-4bbe-8cf3-890615c374b3",
+      "name": "Supabase Vector Store",
+      "credentials": {
+        "supabaseApi": {
+          "id": "foC6A2TornuqhJNU",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        384,
+        160
+      ],
+      "id": "965dfe80-1f58-4506-b13d-1e20c5b05194",
+      "name": "Embeddings Google Gemini",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "RaiKW7ruUAk4UoXe",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        -112,
+        144
+      ],
+      "id": "5e13c86c-077b-4471-9aa1-70b2d8e33a27",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "public": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        -336,
+        -64
+      ],
+      "id": "ce53ce47-ed94-496b-b8bf-42b80499e5f6",
+      "name": "When chat message received",
+      "webhookId": "e8cd3893-6f81-4ca4-b35e-ffc3aa8df270"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Vector Store": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Google Gemini": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "dc59ff20-5208-40b7-aa74-fdfd5a1b5dec",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "dc96f10ae7dc95d3c138575ba243a0a167923dbcb524841d451aadf9135d5fb3"
+  },
+  "nodeGroups": [],
+  "id": "kQOnITcOgHw4gjEA",
+  "tags": []
+}
